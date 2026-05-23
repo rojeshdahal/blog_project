@@ -84,3 +84,17 @@ def delete_post(request, id):
     return render(request, 'posts/delete_post.html', {
         'post': post
     })
+
+def post_list(request):
+
+    query = request.GET.get('q')
+
+    if query:
+        posts = Post.objects.filter(title__icontains=query)
+
+    else:
+        posts = Post.objects.all()
+
+    return render(request, "posts/post_list.html", {
+        "posts": posts
+    })
