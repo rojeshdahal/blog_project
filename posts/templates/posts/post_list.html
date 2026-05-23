@@ -1,3 +1,21 @@
+{% for post in posts %}
+
+    <h2>
+        <a href="/posts/{{ post.id }}/">
+            {{ post.title }}
+        </a>
+    </h2>
+
+    <p>{{ post.content }}</p>
+
+    <small>
+        Author: {{ post.author }}
+    </small>
+
+    <hr>
+
+{% endfor %}
+
 {% if user.is_authenticated %}
 
     <p>

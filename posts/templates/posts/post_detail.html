@@ -13,5 +13,18 @@
     <br>
     <small>Published: {{ post.created_at }}</small>
 
+    {% if request.user == post.author %}
+
+        <a href="/posts/{{ post.id }}/edit/">
+            Edit
+        </a>
+
+        <br><br>
+
+        <a href="/posts/{{ post.id }}/delete/">
+            Delete
+        </a>
+
+    {% endif %}
 </body>
 </html>
