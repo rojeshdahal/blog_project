@@ -2,13 +2,27 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import PostForm, Post
 from django.http import HttpResponseForbidden
+from django.core.paginator import Paginator
 
 from .models import Post
 
-
 def post_list(request):
 
-    posts = Post.objects.all()
+    query = request.GET.get('q')
+
+    if query:
+        post_list = Post.objects.filter(
+            title__icontains=query
+        )
+
+    else:
+        post_list = Post.objects.all()
+
+    paginator = Paginator(post_list, 3)
+
+    page_number = request.GET.get('page')
+
+    posts = paginator.get_page(page_number)
 
     return render(request, "posts/post_list.html", {
         "posts": posts
@@ -83,18 +97,4 @@ def delete_post(request, id):
 
     return render(request, 'posts/delete_post.html', {
         'post': post
-    })
-
-def post_list(request):
-
-    query = request.GET.get('q')
-
-    if query:
-        posts = Post.objects.filter(title__icontains=query)
-
-    else:
-        posts = Post.objects.all()
-
-    return render(request, "posts/post_list.html", {
-        "posts": posts
     })
