@@ -1,63 +1,90 @@
-<form method="GET">
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1 class="text-4xl font-bold mb-6">
+    Blog Posts
+</h1>
+
+<form method="GET" class="mb-6">
 
     <input
         type="text"
         name="q"
         placeholder="Search posts..."
+        class="w-full p-3 border rounded"
     >
-
-    <button type="submit">
-        Search
-    </button>
 
 </form>
 
-
 {% for post in posts %}
 
-    <h2>
-        <a href="/posts/{{ post.id }}/">
+<div class="bg-white p-6 rounded shadow mb-4">
+
+    <h2 class="text-2xl font-semibold mb-2">
+
+        <a
+            href="/posts/{{ post.id }}/"
+            class="text-blue-600"
+        >
             {{ post.title }}
         </a>
+
     </h2>
 
-    <p>{{ post.content }}</p>
+    <p class="text-gray-700 mb-4">
+        {{ post.content|truncatewords:30 }}
+    </p>
 
-    <small>
+    <small class="text-gray-500">
         Author: {{ post.author }}
     </small>
 
-    <hr>
+</div>
 
 {% endfor %}
 
-<div>
+<div class="flex gap-3 mt-6">
 
     {% if posts.has_previous %}
 
-        <a href="?page=1">
+        <a
+            href="?page=1"
+            class="bg-gray-300 px-4 py-2 rounded"
+        >
             First
         </a>
 
-        <a href="?page={{ posts.previous_page_number }}">
+        <a
+            href="?page={{ posts.previous_page_number }}"
+            class="bg-gray-300 px-4 py-2 rounded"
+        >
             Previous
         </a>
 
     {% endif %}
 
-    <span>
+    <span class="px-4 py-2">
+
         Page {{ posts.number }}
         of
         {{ posts.paginator.num_pages }}
+
     </span>
 
     {% if posts.has_next %}
 
-        <a href="?page={{ posts.next_page_number }}">
+        <a
+            href="?page={{ posts.next_page_number }}"
+            class="bg-gray-300 px-4 py-2 rounded"
+        >
             Next
         </a>
 
-        <a href="?page={{ posts.paginator.num_pages }}">
+        <a
+            href="?page={{ posts.paginator.num_pages }}"
+            class="bg-gray-300 px-4 py-2 rounded"
+        >
             Last
         </a>
 
@@ -65,38 +92,4 @@
 
 </div>
 
-{% if user.is_authenticated %}
-
-    <p>
-        Welcome, {{ user.username }}
-    </p>
-
-    <a href="/create/">
-        Create Post
-    </a>
-
-    <br><br>
-
-    <form action="/accounts/logout/" method="POST">
-        {% csrf_token %}
-        <button type="submit">
-            Logout
-        </button>
-    </form>
-
-{% else %}
-
-    <a href="/accounts/login/">
-        Login
-    </a>
-
-    <a href="/accounts/register/">
-        Register
-    </a>
-
-{% endif %}
-
-
-<hr>
-
-<hr>
+{% endblock %}

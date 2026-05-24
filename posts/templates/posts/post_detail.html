@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html>
+    {% extends 'base.html' %}
+    {% block content %}
 <head>
     <title>{{ post.title }}</title>
 </head>
 <body>
+    
 
+    
     <h1>{{ post.title }}</h1>
 
     <p>{{ post.content }}</p>
@@ -12,19 +16,21 @@
     <small>Author: {{ post.author }}</small>
     <br>
     <small>Published: {{ post.created_at }}</small>
+    <br>
+    <br>
 
     {% if request.user == post.author %}
-
-        <a href="/posts/{{ post.id }}/edit/">
+        
+        <a href="/posts/{{ post.id }}/edit/" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 target="_blank"">
             Edit
         </a>
 
-        <br><br>
-
-        <a href="/posts/{{ post.id }}/delete/">
+        <a href="/posts/{{ post.id }}/delete/" class="inline-block bg-red-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 target="_blank">
             Delete
         </a>
 
     {% endif %}
+   
 </body>
+ {% endblock %}
 </html>
