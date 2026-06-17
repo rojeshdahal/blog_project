@@ -1,95 +1,93 @@
 {% extends 'base.html' %}
 
+{% block title %}Blog Posts - My Blog{% endblock %}
+
 {% block content %}
-
-<h1 class="text-4xl font-bold mb-6">
-    Blog Posts
-</h1>
-
-<form method="GET" class="mb-6">
-
-    <input
-        type="text"
-        name="q"
-        placeholder="Search posts..."
-        class="w-full p-3 border rounded"
-    >
-
-</form>
-
-{% for post in posts %}
-
-<div class="bg-white p-6 rounded shadow mb-4">
-
-    <h2 class="text-2xl font-semibold mb-2">
-
-        <a
-            href="/posts/{{ post.id }}/"
-            class="text-blue-600"
-        >
-            {{ post.title }}
-        </a>
-
-    </h2>
-
-    <p class="text-gray-700 mb-4">
-        {{ post.content|truncatewords:30 }}
-    </p>
-
-    <small class="text-gray-500">
-        Author: {{ post.author }}
-    </small>
-
+<div class="mb-8">
+    <h1 class="text-5xl font-bold text-slate-800 mb-2">Blog Posts</h1>
+    <p class="text-slate-600">Explore all the latest articles and stories</p>
 </div>
 
-{% endfor %}
-
-<div class="flex gap-3 mt-6">
-
-    {% if posts.has_previous %}
-
-        <a
-            href="?page=1"
-            class="bg-gray-300 px-4 py-2 rounded"
+<form method="GET" class="mb-8">
+    <div class="relative">
+        <input
+            type="text"
+            name="q"
+            placeholder="Search posts..."
+            class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm"
         >
+        <svg class="absolute right-3 top-3 w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+    </div>
+</form>
+
+{% if posts %}
+    <div class="space-y-4 mb-8">
+        {% for post in posts %}
+        <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition duration-300 border border-slate-200 hover:border-blue-300">
+            <div class="flex justify-between items-start mb-3">
+                <h2 class="text-2xl font-bold">
+                    <a href="/posts/{{ post.id }}/" class="text-blue-600 hover:text-blue-800 transition duration-200">
+                        {{ post.title }}
+                    </a>
+                </h2>
+            </div>
+
+            <p class="text-slate-700 mb-4 leading-relaxed">
+                {{ post.content|truncatewords:40 }}
+            </p>
+
+            <div class="flex justify-between items-center text-sm text-slate-500 border-t border-slate-100 pt-4">
+                <div>
+                    <span class="font-medium text-slate-700">{{ post.author }}</span>
+                </div>
+                <div class="text-xs">
+                    {{ post.created_at|date:"M d, Y" }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-8 text-center">
+        <p class="text-slate-600 text-lg">No posts found.</p>
+    </div>
+{% endif %}
+
+<!-- Pagination -->
+{% if posts.paginator.num_pages > 1 %}
+<div class="flex justify-center items-center gap-2 mt-8 flex-wrap">
+    {% if posts.has_previous %}
+        <a href="?page=1" class="bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 px-3 py-2 rounded-lg transition duration-200 text-sm font-medium">
             First
         </a>
 
-        <a
-            href="?page={{ posts.previous_page_number }}"
-            class="bg-gray-300 px-4 py-2 rounded"
-        >
-            Previous
+        <a href="?page={{ posts.previous_page_number }}" class="bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 px-3 py-2 rounded-lg transition duration-200 text-sm font-medium">
+            ← Previous
         </a>
-
+    {% else %}
+        <span class="bg-slate-100 border border-slate-300 text-slate-400 px-3 py-2 rounded-lg text-sm font-medium">First</span>
+        <span class="bg-slate-100 border border-slate-300 text-slate-400 px-3 py-2 rounded-lg text-sm font-medium">← Previous</span>
     {% endif %}
 
-    <span class="px-4 py-2">
-
-        Page {{ posts.number }}
-        of
-        {{ posts.paginator.num_pages }}
-
+    <span class="px-3 py-2 text-slate-700 font-medium">
+        Page <span class="font-bold text-blue-600">{{ posts.number }}</span> of <span class="font-bold">{{ posts.paginator.num_pages }}</span>
     </span>
 
     {% if posts.has_next %}
-
-        <a
-            href="?page={{ posts.next_page_number }}"
-            class="bg-gray-300 px-4 py-2 rounded"
-        >
-            Next
+        <a href="?page={{ posts.next_page_number }}" class="bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 px-3 py-2 rounded-lg transition duration-200 text-sm font-medium">
+            Next →
         </a>
 
-        <a
-            href="?page={{ posts.paginator.num_pages }}"
-            class="bg-gray-300 px-4 py-2 rounded"
-        >
+        <a href="?page={{ posts.paginator.num_pages }}" class="bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 px-3 py-2 rounded-lg transition duration-200 text-sm font-medium">
             Last
         </a>
-
+    {% else %}
+        <span class="bg-slate-100 border border-slate-300 text-slate-400 px-3 py-2 rounded-lg text-sm font-medium">Next →</span>
+        <span class="bg-slate-100 border border-slate-300 text-slate-400 px-3 py-2 rounded-lg text-sm font-medium">Last</span>
     {% endif %}
-
 </div>
+{% endif %}
 
 {% endblock %}

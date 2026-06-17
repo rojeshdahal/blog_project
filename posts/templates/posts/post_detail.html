@@ -1,36 +1,46 @@
-<!DOCTYPE html>
-<html>
-    {% extends 'base.html' %}
-    {% block content %}
-<head>
-    <title>{{ post.title }}</title>
-</head>
-<body>
-    
+{% extends 'base.html' %}
 
-    
-    <h1>{{ post.title }}</h1>
+{% block title %}{{ post.title }} - My Blog{% endblock %}
 
-    <p>{{ post.content }}</p>
+{% block content %}
+<div class="mb-8">
+    <a href="/" class="text-blue-600 hover:text-blue-800 text-sm font-medium mb-4 inline-flex items-center gap-1">
+        ← Back to Posts
+    </a>
+</div>
 
-    <small>Author: {{ post.author }}</small>
-    <br>
-    <small>Published: {{ post.created_at }}</small>
-    <br>
-    <br>
+<article class="bg-white rounded-lg shadow-md border border-slate-200 p-8 mb-8">
+    <div class="mb-6 pb-6 border-b border-slate-200">
+        <h1 class="text-4xl font-bold text-slate-800 mb-4">{{ post.title }}</h1>
+        <div class="flex justify-between items-center text-sm text-slate-600">
+            <div>
+                <span class="font-medium text-slate-800">By {{ post.author }}</span>
+            </div>
+            <div>
+                <time datetime="{{ post.created_at|date:'Y-m-d' }}">{{ post.created_at|date:"F d, Y \a\t H:i" }}</time>
+            </div>
+        </div>
+    </div>
 
-    {% if request.user == post.author %}
-        
-        <a href="/posts/{{ post.id }}/edit/" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 target="_blank"">
-            Edit
-        </a>
+    <div class="prose prose-sm max-w-none mb-8 text-slate-700 leading-relaxed">
+        {{ post.content }}
+    </div>
+</article>
 
-        <a href="/posts/{{ post.id }}/delete/" class="inline-block bg-red-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 target="_blank">
-            Delete
-        </a>
+{% if request.user == post.author %}
+<div class="flex gap-4 justify-start">
+    <a href="/posts/{{ post.id }}/edit/" class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium py-2 px-6 rounded-lg transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+        ✏️ Edit Post
+    </a>
 
-    {% endif %}
-   
-</body>
- {% endblock %}
-</html>
+    <a href="/posts/{{ post.id }}/delete/" class="inline-flex items-center gap-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-medium py-2 px-6 rounded-lg transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+        🗑️ Delete Post
+    </a>
+</div>
+{% else %}
+<div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
+    <p class="text-slate-600 text-sm">You can only edit or delete your own posts.</p>
+</div>
+{% endif %}
+
+{% endblock %}
